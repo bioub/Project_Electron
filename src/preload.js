@@ -5,12 +5,12 @@ const { ipcRenderer, contextBridge } = require('electron/renderer');
 
 contextBridge.exposeInMainWorld('gallery', {
   getImages() {
-    return Promise.resolve([]);
+    return ipcRenderer.invoke('getImages');
   },
   importImages() {
-    return Promise.resolve([]);
+    return ipcRenderer.invoke('importImages');
   },
   exportImages(selection) {
-
+    ipcRenderer.send('exportImages', selection);
   },
 });

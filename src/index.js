@@ -20,7 +20,14 @@ async function initImages() {
   }
 }
 
-async function getImages() {}
+async function getImages() {
+  const userDataPath = app.getPath('userData');
+  const imgUserDataPath = path.resolve(userDataPath, 'img');
+
+  const files = await fs.readdir(imgUserDataPath);
+
+  return files.map((file) => path.resolve(imgUserDataPath, file));
+}
 
 async function importImages() {}
 
@@ -69,3 +76,6 @@ app.on('activate', () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
+ipcMain.handle('getImages', getImages);
+ipcMain.handle('importImages', importImages);
+ipcMain.on('exportImages', exportImages);
