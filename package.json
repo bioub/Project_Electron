@@ -12,5 +12,8 @@
   },
   "scripts": {
     "start": "electron ."
+  },
+  "dependencies": {
+    "sharp": "^0.31.1"
   }
 }

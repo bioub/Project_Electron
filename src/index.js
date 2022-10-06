@@ -1,6 +1,7 @@
 const { app, BrowserWindow, ipcMain, dialog, Menu } = require('electron');
 const path = require('path');
 const fs = require('fs/promises');
+const sharp = require('sharp');
 
 let mainWindow;
 
@@ -29,9 +30,60 @@ async function getImages() {
   return files.map((file) => path.resolve(imgUserDataPath, file));
 }
 
-async function importImages() {}
+async function importImages() {
+  const userDataPath = app.getPath('userData');
+  const imgUserDataPath = path.resolve(userDataPath, 'img');
 
-async function exportImages(event, selection) {}
+  const returnValue = await dialog.showOpenDialog(mainWindow, {
+    title: 'Import images',
+    message: 'Select images to import',
+    buttonLabel: 'Import',
+    filters: [
+      {
+        name: 'Images',
+        extensions: ['jpg', 'jpeg', 'png', 'webp'],
+      },
+    ],
+    properties: ['openFile', 'multiSelections'],
+  });
+
+  const newFiles = [];
+
+  for (const image of returnValue.filePaths) {
+    const basename = path.basename(image);
+    const dest = path.resolve(imgUserDataPath, basename);
+    await fs.copyFile(image, dest);
+
+    newFiles.push(dest);
+  }
+
+  return newFiles;
+}
+
+async function exportImages(event, selection) {
+  const returnValue = await dialog.showOpenDialog(mainWindow, {
+    title: 'Export images to WebP',
+    message: 'Select folder to export you images',
+    buttonLabel: 'Export',
+    properties: ['openDirectory', 'createDirectory'],
+  });
+
+  if (returnValue.filePaths[0]) {
+    for (const image of selection) {
+      const name = path.parse(image).name;
+      const dest = path.resolve(returnValue.filePaths[0], `${name}.webp`)
+
+      await sharp(image).toFile(dest);
+    }
+  }
+
+  await dialog.showMessageBox(mainWindow, {
+    title: 'Success',
+    type: 'info',
+    message: 'Export completed',
+    buttons: ['OK'],
+  });
+}
 
 const createWindow = async () => {
   await initImages();
