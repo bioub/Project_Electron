@@ -1,6 +1,6 @@
 # Electron Exercises
 
-## Create a new project
+## Ex1: Create a new project
 
 Clone this repository
 
@@ -11,7 +11,7 @@ Create a npm start script that will run the `src/index.js` with electron
 Launch the start script
 
 
-## User Data
+## Ex2: User Data
 
 We would like to create a `img` folder in the user data directory of the app and get the images pathes.
 
@@ -24,7 +24,7 @@ If `img` doesn't exist in `userData`, create it using `fs.cp` with the `recursiv
 We call this function inside the `createWindow` function so each time a main window is created we ensure the userData `img` folder exist.
 
 
-## App Communication and preload
+## Ex3: App Communication and preload
 
 In `src/main.js` we have 3 functions that need to be implemented :
 
@@ -48,7 +48,7 @@ In the preload script, create a gallery object using `contextBridge`, this objec
 
 `exportImages` takes a selection as param, it should call the `exportImages` from the main process but doesn't expect any return (one way communication)
 
-## Dialogs
+## Ex4: Dialogs
 
 Complete the `importImages` function from the main process so it will open an openDialog with title `Import Images`, button `Import`. We should only be able to select `.png`, `.jpg`, `.jpeg`, `.webp` files. We should be able to select multiple image at once.
 
@@ -107,7 +107,7 @@ async function exportImages(event, selection) {
 }
 ```
 
-## Menus
+## Ex5: Menus
 
 In the File Menu insert the following items :
 
@@ -120,7 +120,7 @@ In the File Menu insert the following items :
 
 When we click on the menu we will have to call the `exportImages` function with the selection coming from the renderer process.
 
-## Multiple windows
+## Ex6: Multiple windows
 
 In the renderer process listen to the `dblclick` DOM event on images.
 
@@ -130,7 +130,7 @@ You will have to create a communication between the two renderer processes to di
 
 When we click on that modal it should hide.
 
-## Packaging
+## Ex7: Packaging
 
 Follow the quick setup guide on electron-builder to create a package of the app on you platform :
 [https://www.electron.build/#quick-setup-guide]()
