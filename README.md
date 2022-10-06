@@ -114,11 +114,11 @@ In the File Menu insert the following items :
 - `Import Images`
 - `Export Selection in WebP` 
 
-`Import Images` can call the `importImages` but will have to notify the renderer process that new images are available. Use main to renderer communication with the preload script.
+`Import Images` can call the `importImages` function but will have to notify the renderer process that new images are available. Use main to renderer communication with the preload script.
 
 `Export Selection in WebP` should only be available when a selection is made in the renderer process so you will have to do renderer to main communication with the preload script to enable/disable the menu. 
 
-When we click on the menu 
+When we click on the menu we will have to call the `exportImages` function with the selection coming from the renderer process.
 
 ## Multiple windows
 
