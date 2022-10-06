@@ -1,0 +1,10 @@
+{
+  "productName": "Gallery",
+  "version": "1.0.0",
+  "description": "My Gallery application",
+  "main": "src/index.js",
+  "author": {
+    "name": "John Doe",
+    "email": "john.doe@formation.tech"
+  }
+}
