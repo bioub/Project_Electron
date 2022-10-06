@@ -19,4 +19,7 @@ contextBridge.exposeInMainWorld('gallery', {
   selectImages(selection) {
     ipcRenderer.send('selectImages', selection);
   },
+  showModal(path) {
+    ipcRenderer.send('showModal', path);
+  }
 });

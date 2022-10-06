@@ -5,6 +5,10 @@ const sharp = require('sharp');
 
 /** @type {BrowserWindow} */
 let mainWindow;
+
+/** @type {BrowserWindow} */
+let childWindow;
+
 let selection = [];
 
 async function initImages() {
@@ -95,6 +99,15 @@ function selectImages(event, selectionFromRenderer) {
   exportMenuItem.enabled = Boolean(selection.length);
 }
 
+function showModal(event, image) {
+  childWindow.webContents.send('displayImage', image);
+  childWindow.show();
+}
+
+function closeModal() {
+  childWindow.hide();
+}
+
 const createWindow = async () => {
   await initImages();
 
@@ -109,8 +122,23 @@ const createWindow = async () => {
 
   // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, 'index.html'));
+
+  childWindow = new BrowserWindow({
+    parent: mainWindow,
+    modal: true,
+    width: 640,
+    height: 480,
+    show: false,
+    webPreferences: {
+      preload: path.join(__dirname, 'show-image-preload.js'),
+    },
+  });
+
+  childWindow.loadFile(path.join(__dirname, 'show-image.html'));
+
   // Open the DevTools.
   // mainWindow.webContents.openDevTools();
+
   const menu = Menu.getApplicationMenu();
   const fileSubMenu = menu.items.find((item) => item.role === 'filemenu').submenu;
 
@@ -165,4 +193,6 @@ app.on('activate', () => {
 ipcMain.handle('getImages', getImages);
 ipcMain.handle('importImages', importImages);
 ipcMain.on('exportImages', exportImages);
-ipcMain.on('selectImages', selectImages)
+ipcMain.on('selectImages', selectImages);
+ipcMain.on('showModal', showModal);
+ipcMain.on('closeModal', closeModal);

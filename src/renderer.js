@@ -57,3 +57,9 @@ gallery.getNewImages((images) => {
     createImageEl(image);
   }
 });
+
+galleryEl.addEventListener('dblclick', (event) => {
+  if (event.target instanceof HTMLImageElement) {
+    gallery.showModal(event.target.dataset.path);
+  }
+});

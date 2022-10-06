@@ -1,0 +1,12 @@
+body {
+  margin: 0;
+  display: flex;
+  background-color: #333333;
+  cursor: pointer;
+}
+
+img {
+  margin: auto;
+  max-width: 100vh;
+  max-height: 100vh;
+}
