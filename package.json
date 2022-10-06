@@ -6,5 +6,11 @@
   "author": {
     "name": "John Doe",
     "email": "john.doe@formation.tech"
+  },
+  "devDependencies": {
+    "electron": "^21.1.0"
+  },
+  "scripts": {
+    "start": "electron ."
   }
 }
