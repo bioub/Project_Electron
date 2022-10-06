@@ -33,6 +33,7 @@ galleryEl.addEventListener('click', (event) => {
       event.target.classList.add('active');
       selection.add(event.target.dataset.path);
     }
+    gallery.selectImages([...selection]);
 
     exportBtnEl.disabled = !selection.size;
   }
@@ -50,3 +51,9 @@ exportBtnEl.addEventListener('click', () => {
 });
 
 loadImages();
+
+gallery.getNewImages((images) => {
+  for (const image of images) {
+    createImageEl(image);
+  }
+});

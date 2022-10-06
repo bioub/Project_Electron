@@ -13,4 +13,10 @@ contextBridge.exposeInMainWorld('gallery', {
   exportImages(selection) {
     ipcRenderer.send('exportImages', selection);
   },
+  getNewImages(callback) {
+    ipcRenderer.on('newImages', (event, images) => callback(images));
+  },
+  selectImages(selection) {
+    ipcRenderer.send('selectImages', selection);
+  },
 });

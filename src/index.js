@@ -1,9 +1,11 @@
-const { app, BrowserWindow, ipcMain, dialog, Menu } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, Menu, MenuItem } = require('electron');
 const path = require('path');
 const fs = require('fs/promises');
 const sharp = require('sharp');
 
+/** @type {BrowserWindow} */
 let mainWindow;
+let selection = [];
 
 async function initImages() {
   const appPath = app.getAppPath();
@@ -71,7 +73,7 @@ async function exportImages(event, selection) {
   if (returnValue.filePaths[0]) {
     for (const image of selection) {
       const name = path.parse(image).name;
-      const dest = path.resolve(returnValue.filePaths[0], `${name}.webp`)
+      const dest = path.resolve(returnValue.filePaths[0], `${name}.webp`);
 
       await sharp(image).toFile(dest);
     }
@@ -83,6 +85,14 @@ async function exportImages(event, selection) {
     message: 'Export completed',
     buttons: ['OK'],
   });
+}
+
+function selectImages(event, selectionFromRenderer) {
+  selection = selectionFromRenderer;
+  const menu = Menu.getApplicationMenu();
+  const exportMenuItem = menu.getMenuItemById('export_selection');
+
+  exportMenuItem.enabled = Boolean(selection.length);
 }
 
 const createWindow = async () => {
@@ -99,9 +109,33 @@ const createWindow = async () => {
 
   // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, 'index.html'));
-
   // Open the DevTools.
   // mainWindow.webContents.openDevTools();
+  const menu = Menu.getApplicationMenu();
+  const fileSubMenu = menu.items.find((item) => item.role === 'filemenu').submenu;
+
+  const importMenuItem = new MenuItem({
+    label: 'Import Images',
+    accelerator: 'CommandOrControl+I',
+    async click() {
+      const images = await importImages();
+      mainWindow.webContents.send('newImages', images);
+    },
+  });
+  fileSubMenu.insert(0, importMenuItem);
+
+  const exportMenuItem = new MenuItem({
+    id: 'export_selection',
+    label: 'Export Selection to WebP',
+    accelerator: 'CommandOrControl+E',
+    enabled: false,
+    async click() {
+      await exportImages({}, selection);
+    },
+  });
+  fileSubMenu.insert(1, exportMenuItem);
+
+  Menu.setApplicationMenu(menu);
 };
 
 // This method will be called when Electron has finished
@@ -131,3 +165,4 @@ app.on('activate', () => {
 ipcMain.handle('getImages', getImages);
 ipcMain.handle('importImages', importImages);
 ipcMain.on('exportImages', exportImages);
+ipcMain.on('selectImages', selectImages)
