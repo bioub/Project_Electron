@@ -4,7 +4,21 @@ const fs = require('fs/promises');
 
 let mainWindow;
 
-async function initImages() {}
+async function initImages() {
+  const appPath = app.getAppPath();
+  const userDataPath = app.getPath('userData');
+
+  const imgDemoFolderPath = path.resolve(appPath, 'img');
+  const imgUserDataPath = path.resolve(userDataPath, 'img');
+
+  try {
+    await fs.access(imgUserDataPath);
+  } catch (err) {
+    if (err.code === 'ENOENT') {
+      await fs.cp(imgDemoFolderPath, imgUserDataPath, { recursive: true });
+    }
+  }
+}
 
 async function getImages() {}
 
