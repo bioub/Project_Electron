@@ -3,6 +3,12 @@ const path = require('path');
 const fs = require('fs/promises');
 const sharp = require('sharp');
 
+const originalConsoleLog = console.log;
+console.log = (...args) => {
+  // ipcMain.send()
+  originalConsoleLog.apply(args);
+}
+
 /** @type {BrowserWindow} */
 let mainWindow;
 
