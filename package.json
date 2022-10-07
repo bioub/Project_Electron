@@ -1,4 +1,5 @@
 {
+  "name": "gallery",
   "productName": "Gallery",
   "version": "1.0.0",
   "description": "My Gallery application",
@@ -8,7 +9,8 @@
     "email": "john.doe@formation.tech"
   },
   "devDependencies": {
-    "electron": "^21.1.0"
+    "electron": "^21.1.0",
+    "electron-builder": "^23.3.3"
   },
   "scripts": {
     "start": "electron ."
